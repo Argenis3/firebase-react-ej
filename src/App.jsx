@@ -1,10 +1,33 @@
+//crear los componentes en el to do list
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import {useFirestore} from '../hooks/useFirestore'
 
 function App() {
-  
+  const [taskInput, setTaskInput] = useState('');
+  const {
+    documents: tasks,
+    loading,
+    error,
+    addDocument,
+    deleteDocument,
+  } = useFirestore('tasks');
+
+  const handleAddTask = async (e) => {
+    e.preventDefault();
+    if(taskInput.trim()){
+      await addDocument({ 
+        title: taskInput,
+        completed: false,
+       });
+      setTaskInput('');
+    }
+  };
+  const handleDeleteTask = async (id) => {
+    await deleteDocument(id);
+  };
 
   return (
     <>
@@ -18,4 +41,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
