@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 
-//@param {string} collectionName - Nombre de la colección de Firestore
+// @param {string} collectionName - Nombre de la colección de Firestore
 export const useFirestore = (collectionName) => {
     const [documents, setDocuments] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -28,7 +28,7 @@ export const useFirestore = (collectionName) => {
             orderBy("createdAt", "desc")
         );
 
-        const unsubscribe = onSnapshot
+        const unsubscribe = onSnapshot(
             q,
             (snapshot) => {
                 const docs = snapshot.docs.map((doc) => ({
@@ -40,35 +40,46 @@ export const useFirestore = (collectionName) => {
                 setError(null);
             },
             (error) => {
-                console.error("Error al obtener documentos: ", error);
+                console.error("Error al obtener los documentos: ", error);
                 setError(error.message);
                 setLoading(false);
             }
-        }
         );
 
-        //cleanup listener on unmount
+        // Cleanup subscription on unmount
         return () => unsubscribe();
     }, [collectionName]);
-    // Función para agregar un documento a la colección}
 
+    // Función para agregar un documento a la colección
     const addDocument = async (data) => {
-        try{
+        try {
             const docRef = await addDoc(collection(db, collectionName), {
                 ...data,
-                createdAt: new Date(),
+                createdAt: new Date()
             });
-            return{success: true, id: docRef.id};
-        } catch (error){
-            console.error("Error al agregar documento: ", error);
-            return {success: false, error: error.message};
+            return { success: true, id: docRef.id };
+        } catch (error) {
+            console.error("Error al agregar el documento: ", error);
+            return { success: false, error: error.message };
         }
     };
-    
+
+    // Función para eliminar un documento de la colección
+    const deleteDocument = async (id) => {
+        try {
+            await deleteDoc(doc(db, collectionName, id));
+            return { success: true };
+        } catch (error) {
+            console.error("Error al eliminar el documento: ", error);
+            return { success: false, error: error.message };
+        }
+    };
+
     return {
         documents,
         loading,
         error,
         addDocument,
-        deleteDocument
-    }
+        deleteDocument,
+    };
+}
