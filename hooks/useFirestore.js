@@ -82,4 +82,4 @@ export const useFirestore = (collectionName) => {
         addDocument,
         deleteDocument,
     };
-}
+};
