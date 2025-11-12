@@ -1,8 +1,9 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import "./App.css";
 import { useFirestore } from "../hooks/useFirestore";
 import { useAuth } from "../hooks/useAuth";
+import { Button } from "./components/components/button";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [taskInput, setTaskInput] = useState("");
@@ -38,55 +39,49 @@ function App() {
 
   return (
     <>
-      <nav className="navbar bg-gray-800 p-4 flex items-center gap-4 justify-between">
-        <div className="flex items-center gap-4">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-          <h1 className="text-3xl font-bold text-orange-500">
-            Implementación de Firebase
-          </h1>
-        </div>
-        <div>
-          {user ? (
-            <>
-              <span className="text-white mr-4">{user.email}</span>
-              <button onClick={logout} className="bg-red-500 text-white px-3 py-1 rounded">
-                Cerrar sesión
-              </button>
-            </>
-          ) : null}
-        </div>
-      </nav>
+      <Navbar user={user} logout={logout} />
 
       <main className="p-4">
         {!user && (
-          <form onSubmit={handleAuth} className="mb-6 flex flex-col gap-2 max-w-sm">
-            <input
-              type="email"
-              placeholder="Correo electrónico"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border p-2 rounded"
-              required
-            />
-            <input
-              type="password"
-              placeholder="Contraseña"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border p-2 rounded"
-              required
-            />
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-              {isRegister ? "Registrarse" : "Iniciar sesión"}
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsRegister(!isRegister)}
-              className="text-blue-600 underline text-sm"
-            >
-              {isRegister ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate"}
-            </button>
-          </form>
+          <div className="flex justify-center">
+            <div className="w-full max-w-md bg-card border border-border rounded-lg shadow-md p-6">
+              <h2 className="text-xl font-semibold mb-4 text-foreground">{isRegister ? "Crear cuenta" : "Iniciar sesión"}</h2>
+              <form onSubmit={handleAuth} className="flex flex-col gap-3">
+                <label className="text-sm text-muted">
+                  Correo electrónico
+                  <input
+                    type="email"
+                    placeholder="correo@ejemplo.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-1 w-full border border-border p-2 rounded focus:outline-none focus:ring-2 focus:ring-ring"
+                    required
+                  />
+                </label>
+
+                <label className="text-sm text-muted">
+                  Contraseña
+                  <input
+                    type="password"
+                    placeholder="Tu contraseña"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="mt-1 w-full border border-border p-2 rounded focus:outline-none focus:ring-2 focus:ring-ring"
+                    required
+                  />
+                </label>
+
+                <div className="flex gap-3 items-center">
+                  <Button type="submit" variant="default" className="flex-1">
+                    {isRegister ? "Registrarse" : "Iniciar sesión"}
+                  </Button>
+                  <Button type="button" variant="link" size="sm" onClick={() => setIsRegister(!isRegister)}>
+                    {isRegister ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?"}
+                  </Button>
+                </div>
+              </form>
+            </div>
+          </div>
         )}
 
         {user && (
@@ -99,9 +94,9 @@ function App() {
                 onChange={(e) => setTaskInput(e.target.value)}
                 className="border p-2 rounded"
               />
-              <button type="submit" className="bg-green-500 text-white p-2 rounded">
+              <Button type="submit" variant="secondary">
                 Agregar
-              </button>
+              </Button>
             </form>
 
             {loading && <p>Cargando tareas...</p>}
@@ -111,12 +106,9 @@ function App() {
               {tasks?.map((task) => (
                 <li key={task.id} className="flex justify-between items-center">
                   <span>{task.title}</span>
-                  <button
-                    onClick={() => deleteDocument(task.id)}
-                    className="bg-red-500 text-white p-1 rounded"
-                  >
+                  <Button onClick={() => deleteDocument(task.id)} variant="destructive" size="sm">
                     Eliminar
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>
