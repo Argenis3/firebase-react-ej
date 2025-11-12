@@ -1,8 +1,9 @@
 // Import the functions you need from the SDKs you need
+// firebase.js
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
@@ -15,7 +16,10 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firestore
+// Initialize Firestore and Auth
 export const db = getFirestore(app);
-
+export const auth = getAuth(app);
 export default app;
+
+
+// tarea integrar el login con firebase (encapsulado con la documentacion de firebase auth) osea reslover el tema de la auth y agregar mas 
