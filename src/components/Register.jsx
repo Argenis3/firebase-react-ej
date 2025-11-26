@@ -3,6 +3,14 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Componente para registrar un nuevo usuario
+ * 
+ * @returns {JSX.Element} un formulario para registrar un nuevo usuario
+ */
+
+/*******  0aa1014b-bc2e-4c12-847f-b3dd244fd8b9  *******/
 export const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
